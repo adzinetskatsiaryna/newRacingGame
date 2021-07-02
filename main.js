@@ -22,6 +22,7 @@ const setting = {
     score: 0,
     speed: 3,
     traffic: 3,
+    record: localStorage.getItem('best_record')
 }
 
 let startSpeed = 0;
@@ -115,7 +116,12 @@ for (let i = 0; i< getQuantityElements(HEIGHT_ELEMENT*setting.traffic); i++){
 function playGame (){
     if(setting.start){
         setting.score+=setting.speed;
-        score.innerHTML = 'SCORE<br>' + setting.score;
+        
+       // score.innerHTML = 'SCORE<br>' + setting.score;
+        
+       score.innerHTML = `
+       <p>SCORE: ${setting.score}</p>
+       ${setting.record ? `<p> Best record: ${setting.record}</p>`: ''}`;
         
         setting.speed = startSpeed + Math.floor(setting.score / 2000)
 
@@ -185,8 +191,14 @@ function muveEnemy (){
             carRect.right >= enemyRect.left &&
             carRect.left <= enemyRect.right &&
             carRect.bottom>=enemyRect.top){
-                setting.start = false
-                console.warn('ДТП')
+                setting.start = false;
+                console.warn('ДТП');
+                if(setting.score>setting.record){
+                    localStorage.setItem('best_racord', setting.score);
+                    alert(`Ура новый рекорд вы набрали на ${setting.score-setting.record} очков больше`);
+                    setting.record=setting.score;
+                    
+                }
                 start.classList.remove('hide');
                 start.style.top = score.offsetHeight + 'px';
 
